@@ -1,0 +1,63 @@
+FUNCTION_BLOCK driver	// Block definition (there may be more than one block per file)
+
+// Define input variables
+VAR_INPUT				
+	x : REAL;
+	y : REAL;
+	angle: REAL;
+END_VAR
+
+// Define output variable
+VAR_OUTPUT				
+	result : REAL;
+END_VAR
+
+// Fuzzify input variable 'x': {'left', 'mid-left', 'mid' , 'mid-right', 'right'}
+FUZZIFY service			
+	TERM left := 	 TRIAN 0 0.1 0.2;
+	TERM midleft :=  TRIAN 0.1 0.25 0.4;
+	TERM mid := 	 TRIAN 0.3 0.5 0.7;
+	TERM midright := TRIAN 0.6 0.75 0.9;
+	TERM right := 	 TRIAN 0.8 0.9 1;
+END_FUZZIFY
+
+// Fuzzify input variable 'y': {'top', 'mid-top', 'mid' , 'mid-bottom', 'bottom'}
+FUZZIFY service			
+	TERM top := 	  TRIAN 0 0.1 0.2;
+	TERM midtop :=    TRIAN 0.1 0.25 0.4;
+	TERM mid := 	  TRIAN 0.3 0.5 0.7;
+	TERM midbottom := TRIAN 0.6 0.75 0.9;
+	TERM bottom := 	  TRIAN 0.8 0.9 1;
+END_FUZZIFY
+
+// TODO
+// Fuzzify input variable 'angle': {'top', 'mid-top', 'mid' , 'mid-bottom', 'bottom'}
+FUZZIFY service			
+	TERM left := (0, 1) (4, 0);
+	TERM midleft := (1, 0) (4,1) (6,1) (9,0);
+	TERM mid := (6, 0) (9, 1);
+	TERM midright := (1, 0) (4,1) (6,1) (9,0);
+	TERM right := (6, 0) (9, 1);
+END_FUZZIFY
+
+// Defuzzify output variable 'tip' : {'cheap', 'average', 'generous' }
+DEFUZZIFY tip			
+	TERM cheap := (0,0) (5,1) (10,0);
+	TERM average := (10,0) (15,1) (20,0);
+	TERM generous := (20,0) (25,1) (30,0);
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+
+// Inference rules
+RULEBLOCK No1
+	AND : MIN;	// Use 'min' for 'and'
+	ACT : MIN;	// Use 'min' activation method
+	ACCU : MAX;	// Use 'max' accumulation method
+
+	RULE 1 : IF service IS poor OR food IS rancid THEN tip IS cheap;
+	RULE 2 : IF service IS good THEN tip IS average; 
+	RULE 3 : IF service IS excellent AND food IS delicious THEN tip IS generous;
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK

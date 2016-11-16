@@ -7,6 +7,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.StringTokenizer;
+
+import net.sourceforge.jFuzzyLogic.FIS;
+import net.sourceforge.jFuzzyLogic.plot.JFuzzyChart;
+import net.sourceforge.jFuzzyLogic.rule.Variable;
  
 public class RemoteDriver {
 	
@@ -54,32 +58,21 @@ public class RemoteDriver {
         	
 			
 //        	double teste = Double.valueOf(stdIn.readLine());
-        	double result = 0;
-            double goal = 0;
-            if (x <= 0.2) {
-                goal = 180;
-            } else if (x <= 0.8) {
-                goal = 90 + (x - 0.5);
+//        	double result = 1;
+
+        	FIS fis = FIS.load("fcl/logic.fcl", true);
+            if (fis == null) {
+                System.err.println("Can't load file");
+                return;
             }
-            double delta = Math.abs(angle - goal);
-            double sign = Math.signum(angle - goal);
-            result -= delta * sign;
 
-//        	if (y > 0.8) {
-//        		double delta = 0;
-//        		double sign = 0;
-//        		if (x <= 0.3) {
-//            		delta = Math.abs(angle - 225);
-//            		sign = Math.signum(angle - 225);
-//        		} else if (x >= 0.7) {
-//            		delta = Math.abs(angle - 315);
-//            		sign = Math.signum(angle - 315);
-//        		}
-//    			result -= delta * sign;
-//        	}
+            fis.setVariable("x", x);
+            fis.setVariable("y", y);
+            fis.setVariable("angle", angle);
 
-        	
-        	double respostaDaSuaLogica = result; // atribuir um valor entre -1 e 1 para virar o volante pra esquerda ou direita.
+            fis.evaluate();
+            Variable result = fis.getVariable("result");
+        	double respostaDaSuaLogica = result.defuzzify(); // atribuir um valor entre -1 e 1 para virar o volante pra esquerda ou direita.
         	
         	
         	///////////////////////////////////////////////////////////////////////////////// Acaba sua modificacao aqui
