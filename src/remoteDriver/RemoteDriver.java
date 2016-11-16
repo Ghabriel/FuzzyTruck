@@ -10,6 +10,7 @@ import java.util.StringTokenizer;
 
 import net.sourceforge.jFuzzyLogic.FIS;
 import net.sourceforge.jFuzzyLogic.plot.JFuzzyChart;
+import net.sourceforge.jFuzzyLogic.rule.Rule;
 import net.sourceforge.jFuzzyLogic.rule.Variable;
  
 public class RemoteDriver {
@@ -60,7 +61,7 @@ public class RemoteDriver {
 //        	double teste = Double.valueOf(stdIn.readLine());
 //        	double result = 1;
 
-        	FIS fis = FIS.load("fcl/logic.fcl", true);
+        	FIS fis = FIS.load("src/logic.fcl", true);
             if (fis == null) {
                 System.err.println("Can't load file");
                 return;
@@ -71,8 +72,13 @@ public class RemoteDriver {
             fis.setVariable("angle", angle);
 
             fis.evaluate();
-            Variable result = fis.getVariable("result");
-        	double respostaDaSuaLogica = result.defuzzify(); // atribuir um valor entre -1 e 1 para virar o volante pra esquerda ou direita.
+            Variable var = fis.getVariable("result");
+            // Show each rule (and degree of support)
+            for( Rule r : fis.getFunctionBlock("driver").getFuzzyRuleBlock("No1").getRules() ) {
+            	System.out.println(r);
+            }
+            double result = var.defuzzify();
+            double respostaDaSuaLogica = result; // atribuir um valor entre -1 e 1 para virar o volante pra esquerda ou direita.
         	
         	
         	///////////////////////////////////////////////////////////////////////////////// Acaba sua modificacao aqui

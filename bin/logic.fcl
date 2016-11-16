@@ -13,23 +13,24 @@ VAR_OUTPUT
 END_VAR
 
 FUZZIFY x			
-	TERM left     := TRIAN 0 0.1 0.2;
-	TERM midleft  := TRIAN 0.1 0.25 0.4;
+	TERM left     := TRIAN 0 0 0.2;
+	TERM midleft  := TRIAN 0.1 0.25 0.45;
 	TERM mid      := TRIAN 0.3 0.5 0.7;
-	TERM midright := TRIAN 0.6 0.75 0.9;
-	TERM right    := TRIAN 0.8 0.9 1;
+	TERM perfect  := TRIAN 0.47 0.5 0.53;
+	TERM midright := TRIAN 0.55 0.75 0.9;
+	TERM right    := TRIAN 0.8 1 1;
 END_FUZZIFY
 
 FUZZIFY y			
-	TERM top       := TRIAN 0 0.1 0.2;
+	TERM top       := TRIAN 0 0 0.2;
 	TERM midtop    := TRIAN 0.1 0.25 0.4;
 	TERM mid       := TRIAN 0.3 0.5 0.7;
 	TERM midbottom := TRIAN 0.6 0.75 0.9;
-	TERM bottom    := TRIAN 0.8 0.9 1;
+	TERM bottom    := TRIAN 0.8 1 1;
 END_FUZZIFY
 
 FUZZIFY angle
-	TERM east	   := TRIAN -45 0 45;
+	TERM east	   := (0, 1) (45, 0) (315, 0) (360, 1);
 	TERM north	   := TRIAN 45 90 135;
 	TERM west	   := TRIAN 135 180 225;
 	TERM south	   := TRIAN 225 270 315;
@@ -40,10 +41,15 @@ FUZZIFY angle
 END_FUZZIFY
 
 DEFUZZIFY result
-	TERM left_big    := TRIAN -15 -30 -45;
-	TERM left_small  := TRIAN 0 -10 -20;
-	TERM right_small := TRIAN 0 10 20;
-	TERM right_big	 := TRIAN 15 30 45;
+	TERM left_huge	 := TRIAN -1 -1 -0.8;
+	TERM left_big    := TRIAN -1 -1 -0.5;
+	TERM left_small  := TRIAN -0.7 -0.45 -0.2;
+	TERM left_micro  := TRIAN -0.3 -0.15 0;
+	TERM nop		 := TRIAN -0.2 0 0.2;
+	TERM right_micro := TRIAN 0 0.15 0.3;
+	TERM right_small := TRIAN 0.2 0.45 0.7;
+	TERM right_big	 := TRIAN 0.5 1 1;
+	TERM right_huge  := TRIAN 0.8 1 1;
 	METHOD : COA;
 	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
 END_DEFUZZIFY
@@ -54,14 +60,63 @@ RULEBLOCK No1
 	ACT :  MIN;	// Use 'min' activation method
 	ACCU : MAX;	// Use 'max' accumulation method
 
-	RULE 1 : IF x IS left THEN result IS left_big;
-	RULE 2 : IF x IS midleft THEN result IS left_big;
-	RULE 3 : IF x IS mid THEN result IS left_big;
-	RULE 4 : IF x IS midright THEN result IS left_big;
-	RULE 5 : IF x IS right THEN result IS left_big;
-	// RULE 1 : IF service IS poor OR food IS rancid THEN tip IS cheap;
-	// RULE 2 : IF service IS good THEN tip IS average; 
-	// RULE 3 : IF service IS excellent AND food IS delicious THEN tip IS generous;
+	// x rules
+	RULE l_n : IF x IS left AND angle IS north THEN result IS right_big;
+	RULE l_e : IF x IS left AND angle IS east THEN result IS left_big;
+	RULE l_w : IF x IS left AND angle IS west THEN result IS nop;
+	RULE l_s : IF x IS left AND angle IS south THEN result IS left_big;
+//	RULE l_nw : IF x IS left AND angle IS northwest THEN result IS right_small;
+	RULE l_nw : IF x IS left AND angle IS northwest THEN result IS nop;
+	RULE l_sw : IF x IS left AND angle IS southwest THEN result IS left_small;
+
+	RULE ml_n : IF x IS midleft AND angle IS north THEN result IS right_small;
+	RULE ml_e : IF x IS midleft AND angle IS east THEN result IS right_big;
+	RULE ml_nw : IF x IS midleft AND angle IS northwest THEN result IS nop;
+	RULE ml_w : IF x IS midleft AND angle IS west THEN result IS left_micro;
+	RULE ml_sw : IF x IS midleft AND angle IS southwest THEN result IS left_big;
+	RULE ml_s : IF x IS midleft AND angle IS south THEN result IS left_big;
+
+	RULE m_n : IF x IS mid AND angle IS north THEN result IS nop;
+	RULE m_e : IF x IS mid AND angle IS east THEN result IS right_big;
+	RULE m_nw : IF x IS mid AND angle IS northwest THEN result IS left_small;
+	RULE m_w : IF x IS mid AND angle IS west THEN result IS left_small;
+	RULE m_sw : IF x IS mid AND angle IS southwest THEN result IS left_big;
+	RULE m_s : IF x IS mid AND angle IS south THEN result IS left_big;
+
+	RULE p_n : IF x IS perfect AND angle IS north THEN result IS nop;
+	RULE p_ne : IF x IS perfect AND angle IS northeast THEN result IS right_small;
+	RULE p_e : IF x IS perfect AND angle IS east THEN result IS right_huge;
+	RULE p_se : IF x IS perfect AND angle IS southeast THEN result IS right_huge;
+	RULE p_nw : IF x IS perfect AND angle IS northwest THEN result IS left_small;
+	RULE p_w : IF x IS perfect AND angle IS west THEN result IS left_huge;
+	RULE p_sw : IF x IS perfect AND angle IS southwest THEN result IS left_huge;
+	RULE p_s : IF x IS perfect AND angle IS south THEN result IS left_big;
+
+	RULE mr_n : IF x IS midright AND angle IS north THEN result IS left_small;
+	RULE mr_ne : IF x IS midright AND angle IS northeast THEN result IS nop;
+	RULE mr_e : IF x IS midright AND angle IS east THEN result IS right_micro;
+	RULE mr_se : IF x IS midright AND angle IS southeast THEN result IS right_big;
+	RULE mr_w : IF x IS midright AND angle IS west THEN result IS left_big;
+	RULE mr_s : IF x IS midright AND angle IS south THEN result IS right_big;
+
+	RULE r_n : IF x IS right AND angle IS north THEN result IS left_big;
+	RULE r_e : IF x IS right AND angle IS east THEN result IS nop;
+	RULE r_w : IF x IS right AND angle IS west THEN result IS right_big;
+	RULE r_s : IF x IS right AND angle IS south THEN result IS right_big;
+	RULE r_ne : IF x IS right AND angle IS northeast THEN result IS left_small;
+	RULE r_se : IF x IS right AND angle IS southeast THEN result IS right_small;
+
+	// y rules
+	RULE l_mb_n: IF (x IS left OR x IS midleft) AND y IS midbottom AND angle IS north THEN result IS right_big;
+	RULE r_mb_n: IF (x IS right OR x IS midright) AND y IS midbottom AND angle IS north THEN result IS left_big;
+	RULE mb_e: IF y IS midbottom AND angle IS east THEN result IS left_small;
+	RULE mb_w: IF y IS midbottom AND angle IS west THEN result IS right_small;
+
+	RULE l_b_n: IF (x IS left OR x IS midleft) AND y IS bottom AND angle IS north THEN result IS right_big;
+	RULE r_b_n: IF (x IS right OR x IS midright) AND y IS bottom AND angle IS north THEN result IS left_big;
+	RULE b_e: IF y IS bottom AND angle IS east THEN result IS left_small;
+	RULE b_w: IF y IS bottom AND angle IS west THEN result IS right_small;
+
 END_RULEBLOCK
 
 END_FUNCTION_BLOCK
