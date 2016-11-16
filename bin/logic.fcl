@@ -72,7 +72,7 @@ RULEBLOCK No1
 //	RULE ml_n : IF x IS midleft AND angle IS north THEN result IS right_small;
 	RULE ml_n : IF x IS midleft AND angle IS north THEN result IS right_micro;
 	RULE ml_e : IF x IS midleft AND angle IS east THEN result IS right_big;
-	RULE ml_nw : IF x IS midleft AND angle IS northwest THEN result IS nop;
+	RULE ml_nw : IF x IS midleft AND angle IS northwest THEN result IS left_micro;
 	RULE ml_w : IF x IS midleft AND angle IS west THEN result IS left_micro;
 	RULE ml_sw : IF x IS midleft AND angle IS southwest THEN result IS left_big;
 	RULE ml_s : IF x IS midleft AND angle IS south THEN result IS left_big;
@@ -97,7 +97,7 @@ RULEBLOCK No1
 
 //	RULE mr_n : IF x IS midright AND angle IS north THEN result IS left_small;
 	RULE mr_n : IF x IS midright AND angle IS north THEN result IS left_micro;
-	RULE mr_ne : IF x IS midright AND angle IS northeast THEN result IS nop;
+	RULE mr_ne : IF x IS midright AND angle IS northeast THEN result IS right_micro;
 	RULE mr_e : IF x IS midright AND angle IS east THEN result IS right_micro;
 	RULE mr_se : IF x IS midright AND angle IS southeast THEN result IS right_big;
 	RULE mr_w : IF x IS midright AND angle IS west THEN result IS left_big;
@@ -114,13 +114,13 @@ RULEBLOCK No1
 	// y rules
 	RULE l_mb_n: IF (x IS left OR x IS midleft) AND y IS midbottom AND angle IS north THEN result IS right_big;
 	RULE r_mb_n: IF (x IS right OR x IS midright) AND y IS midbottom AND angle IS north THEN result IS left_big;
-	RULE mb_e: IF y IS midbottom AND angle IS east THEN result IS left_small;
-	RULE mb_w: IF y IS midbottom AND angle IS west THEN result IS right_small;
+	RULE mb_e: IF y IS midbottom AND angle IS east THEN result IS right_small;
+	RULE mb_w: IF y IS midbottom AND angle IS west THEN result IS left_small;
 
 	RULE l_b_n: IF (x IS left OR x IS midleft) AND y IS bottom AND angle IS north THEN result IS right_big WITH 0.5;
 	RULE r_b_n: IF (x IS right OR x IS midright) AND y IS bottom AND angle IS north THEN result IS left_big WITH 0.5;
-	RULE b_e: IF y IS bottom AND angle IS east THEN result IS left_small WITH 0.5;
-	RULE b_w: IF y IS bottom AND angle IS west THEN result IS right_small WITH 0.5;
+	RULE b_e: IF y IS bottom AND angle IS east THEN result IS right_small WITH 0.5;
+	RULE b_w: IF y IS bottom AND angle IS west THEN result IS left_small WITH 0.5;
 
 END_RULEBLOCK
 
