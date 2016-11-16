@@ -54,25 +54,16 @@ public class RemoteDriver {
         	
 			
 //        	double teste = Double.valueOf(stdIn.readLine());
-        	double d0 = Math.abs(angle);
-        	double d90 = Math.abs(angle - 90);
-        	double d180 = Math.abs(angle - 180);
-        	double d270 = Math.abs(angle - 270);
         	double result = 0;
-        	if (x <= 0.2) {
-//        		if (d180 <= 15) {
-        			result -= d180 * Math.signum(angle - 180);
-//            	} else {
-//            		result -= 30 * Math.signum(angle - 180);
-//            	}
-        	} else if (x <= 0.8) {
-        		result -= d90 * Math.signum(angle - 90);
-//        		double goal = 90;
-//        		double delta = Math.abs(angle - goal);
-//        		double sign = Math.signum(angle - goal);
-        	} else {
-        		result -= d0 * Math.signum(angle);
-        	}
+            double goal = 0;
+            if (x <= 0.2) {
+                goal = 180;
+            } else if (x <= 0.8) {
+                goal = 90 + (x - 0.5);
+            }
+            double delta = Math.abs(angle - goal);
+            double sign = Math.signum(angle - goal);
+            result -= delta * sign;
 
 //        	if (y > 0.8) {
 //        		double delta = 0;
