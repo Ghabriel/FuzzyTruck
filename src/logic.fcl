@@ -78,19 +78,19 @@ RULEBLOCK No1
 	RULE ml_s : IF x IS midleft AND angle IS south THEN result IS left_big;
 
 	RULE m_n : IF x IS mid AND angle IS north THEN result IS nop;
-	RULE m_ne : IF x IS mid AND angle IS northeast THEN result IS right_small;
+	RULE m_ne : IF x IS mid AND angle IS northeast THEN result IS right_big;
 	RULE m_e : IF x IS mid AND angle IS east THEN result IS right_big;
 	RULE m_se : IF x IS mid AND angle IS southeast THEN result IS right_big;
-	RULE m_nw : IF x IS mid AND angle IS northwest THEN result IS left_small;
-	RULE m_w : IF x IS mid AND angle IS west THEN result IS left_small;
+	RULE m_nw : IF x IS mid AND angle IS northwest THEN result IS left_big;
+	RULE m_w : IF x IS mid AND angle IS west THEN result IS left_big;
 	RULE m_sw : IF x IS mid AND angle IS southwest THEN result IS left_big;
 	RULE m_s : IF x IS mid AND angle IS south THEN result IS left_big;
 
 	RULE p_n : IF x IS perfect AND angle IS north THEN result IS nop WITH 1.5;
-	RULE p_ne : IF x IS perfect AND angle IS northeast THEN result IS right_small WITH 1.5;
+	RULE p_ne : IF x IS perfect AND angle IS northeast THEN result IS right_big WITH 1.5;
 	RULE p_e : IF x IS perfect AND angle IS east THEN result IS right_huge WITH 1.5;
 	RULE p_se : IF x IS perfect AND angle IS southeast THEN result IS right_huge WITH 1.5;
-	RULE p_nw : IF x IS perfect AND angle IS northwest THEN result IS left_small WITH 1.5;
+	RULE p_nw : IF x IS perfect AND angle IS northwest THEN result IS left_big WITH 1.5;
 	RULE p_w : IF x IS perfect AND angle IS west THEN result IS left_huge WITH 1.5;
 	RULE p_sw : IF x IS perfect AND angle IS southwest THEN result IS left_huge WITH 1.5;
 	RULE p_s : IF x IS perfect AND angle IS south THEN result IS left_big WITH 1.5;
